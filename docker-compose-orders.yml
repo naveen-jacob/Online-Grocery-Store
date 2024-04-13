@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16.2
+    ports:
+      - "8003:5432"
+    environment:
+      POSTGRES_DB: ogms_orders
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - orders_db:/var/lib/postgresql/data
+
+volumes:
+  orders_db:

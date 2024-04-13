@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16.2
+    ports:
+      - "8002:5432"
+    environment:
+      POSTGRES_DB: ogms_cart
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - cart_db:/var/lib/postgresql/data
+
+volumes:
+  cart_db:

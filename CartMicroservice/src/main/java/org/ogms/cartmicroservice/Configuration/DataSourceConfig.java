@@ -1,0 +1,23 @@
+package org.ogms.cartmicroservice.Configuration;
+
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class DataSourceConfig {
+
+    @Bean
+    @Primary
+    public DataSource dataSource() {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl("jdbc:postgresql://localhost:8002/ogms_cart");
+        dataSource.setUsername("admin");
+        dataSource.setPassword("admin");
+        dataSource.setMaximumPoolSize(10);
+        return dataSource;
+    }
+}
