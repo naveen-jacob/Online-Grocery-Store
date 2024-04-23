@@ -2,6 +2,7 @@ package org.ogms.frontend.Service;
 
 import org.ogms.frontend.Model.Order;
 import org.ogms.frontend.Model.Product;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import java.util.List;
 public class OrderService {
     private final RestClient restClient;
 
+    @Value("${ogms.gateway.url}")
+    private String gateway_endpoint;
 
     public OrderService() {
         this.restClient = RestClient.create();
@@ -21,7 +24,7 @@ public class OrderService {
 
     public List<Order> getOrders() {
         ResponseEntity<List<Order>> response = restClient.get()
-                .uri("http://localhost:9000/api/v1/cart/get")
+                .uri(gateway_endpoint+"/api/v1/cart/get")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<List<Order>>() {});

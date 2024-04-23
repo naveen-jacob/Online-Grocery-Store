@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  gatewayapp:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: r2dbc:postgresql://gatewaydb:5432/ogms_gateway
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      OGMS_PRODUCT_ENDPOINT: http://productapp:9001
+      OGMS_CART_ENDPOINT: http://cartapp:9002
+      OGMS_ORDER_ENDPOINT: http://orderapp:9003
+    depends_on:
+      - gatewaydb
+    networks:
+      - ogms
+  gatewaydb:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ogms_gateway
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - gateway_db:/var/lib/postgresql/data
+      - ./resources/db/gateway_init.sql:/docker-entrypoint-initdb.d/gateway_init.sql
+    networks:
+      - ogms
+
+volumes:
+  gateway_db:
+
+networks:
+  ogms:
+    name: ogms

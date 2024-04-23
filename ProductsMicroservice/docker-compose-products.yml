@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  productapp:
+    build: .
+    ports:
+      - "9001:9001"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://productdb:5432
+      SPRING_DATASOURCE_NAME: ogms_products
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    depends_on:
+      - productdb
+    networks:
+      - ogms
+  productdb:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ogms_products
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - product_db:/var/lib/postgresql/data
+      - ./resources/db/products_init.sql:/docker-entrypoint-initdb.d/products_init.sql
+    networks:
+      - ogms
+
+volumes:
+  product_db:
+
+networks:
+  ogms:
+    name: ogms

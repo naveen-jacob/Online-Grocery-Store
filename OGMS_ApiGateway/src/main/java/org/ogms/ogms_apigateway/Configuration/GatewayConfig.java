@@ -1,5 +1,6 @@
 package org.ogms.ogms_apigateway.Configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,15 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 public class GatewayConfig {
+
+    @Value("${ogms.product.endpoint}")
+    private String productEndpoint;
+
+    @Value("${ogms.cart.endpoint}")
+    private String cartEndpoint;
+
+    @Value("${ogms.order.endpoint}")
+    private String orderEndpoint;
 
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
@@ -32,15 +42,15 @@ public class GatewayConfig {
                         .path("/api/v1/product/**")
                         .filters(f -> f
                                 .removeRequestHeader("Authorization"))
-                        .uri("http://localhost:9001"))
+                        .uri(productEndpoint))
 
                 .route("CartMicroservice", fn -> fn
                         .path("/api/v1/cart/**")
-                        .uri("http://localhost:9002"))
+                        .uri(cartEndpoint))
 
                 .route("OrderMicroservice", fn -> fn
                         .path("/api/v1/order/**")
-                        .uri("http://localhost:9003"))
+                        .uri(orderEndpoint))
                 .build();
     }
 }

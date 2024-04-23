@@ -1,6 +1,7 @@
 package org.ogms.frontend.Service;
 
 import org.ogms.frontend.Model.Product;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,16 @@ import java.util.List;
 public class ProductService {
     private final RestClient restClient;
 
+    @Value("${ogms.gateway.url}")
+    private String gateway_endpoint;
+
     public ProductService() {
         this.restClient = RestClient.create();
     }
 
     public List<Product> getProducts() {
         ResponseEntity<List<Product>> response = restClient.get()
-                .uri("http://localhost:9000/api/v1/product/all")
+                .uri(gateway_endpoint+"/api/v1/product/all")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<List<Product>>() {});
@@ -29,7 +33,7 @@ public class ProductService {
 
     public Product getProduct(String id) {
         ResponseEntity<Product> response = restClient.get()
-                .uri("http://localhost:9000/api/v1/product/" + id)
+                .uri(gateway_endpoint+"/api/v1/product/" + id)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<Product>() {});

@@ -3,6 +3,7 @@ package org.ogms.frontend.Service;
 import org.ogms.frontend.Model.Cart;
 import org.ogms.frontend.Model.Credentials;
 import org.ogms.frontend.Model.Product;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class CartService {
     private final Credentials credentials;
     private final Cart cart;
 
+    @Value("${ogms.gateway.url}")
+    private String gateway_endpoint;
+
     public CartService(Credentials credentials, Cart cart) {
         this.credentials = credentials;
         this.cart = cart;
@@ -27,7 +31,7 @@ public class CartService {
 
     public void getCart() {
         ResponseEntity<Cart> response = restClient.get()
-                .uri("http://localhost:9000/api/v1/cart/get")
+                .uri(gateway_endpoint+"/api/v1/cart/get")
                 .header("Authorization", "Basic " + credentials.getEncodedAuth())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -71,7 +75,7 @@ public class CartService {
     public void updateUpstream() {
         try {
             ResponseEntity<Cart> response = restClient.put()
-                    .uri("http://localhost:9000/api/v1/cart/update")
+                    .uri(gateway_endpoint+"/api/v1/cart/update")
                     .header("Authorization", "Basic " + credentials.getEncodedAuth())
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(cart)
